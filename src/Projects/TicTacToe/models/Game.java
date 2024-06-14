@@ -36,6 +36,8 @@ public class Game {
         board.print();
     }
 
+    public void makeMove() {}
+
     public List<Player> getPlayers() {
         return players;
     }
