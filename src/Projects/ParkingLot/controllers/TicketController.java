@@ -28,9 +28,9 @@ public class TicketController {
 
             responseDTO.setTicket(ticket);
             responseDTO.setResponseStatus(ResponseStatus.SUCCESS);
-        } catch (GateNotFoundException | VehicleNotFoundException | ParkingLotNotFoundException e) {
+        } catch (GateNotFoundException gateNotFoundException) {
+            gateNotFoundException.getMessage();
             responseDTO.setResponseStatus(ResponseStatus.FAILURE);
-            throw e;  // Rethrow the same exception that was caught
         }
         return responseDTO;
     }

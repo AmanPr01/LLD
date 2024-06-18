@@ -3,19 +3,19 @@ package Projects.ParkingLot.models;
 import java.util.Date;
 
 public class Ticket extends BaseModel {
-    private String ticketNumber;
+    private String number;
     private Date entryTime;
     private Vehicle vehicle;
     private ParkingSpot parkingSpot;
-    private Gate generatedGate;
+    private Gate generatedAt;
     private Operator generatedBy;
 
-    public String getTicketNumber() {
-        return ticketNumber;
+    public String getNumber() {
+        return number;
     }
 
-    public void setTicketNumber(String ticketNumber) {
-        this.ticketNumber = ticketNumber;
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     public Date getEntryTime() {
@@ -34,12 +34,12 @@ public class Ticket extends BaseModel {
         this.vehicle = vehicle;
     }
 
-    public Gate getGeneratedGate() {
-        return generatedGate;
+    public Gate getGeneratedAt() {
+        return generatedAt;
     }
 
-    public void setGeneratedGate(Gate generatedGate) {
-        this.generatedGate = generatedGate;
+    public void setGeneratedAt(Gate generatedAt) {
+        this.generatedAt = generatedAt;
     }
 
     public ParkingSpot getParkingSpot() {

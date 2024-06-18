@@ -17,44 +17,46 @@ import java.util.Optional;
 public class TicketService {
     private GateRepository gateRepository;
     private VehicleRepository vehicleRepository;
-    private TicketRepository ticketRepository;
     private ParkingLotRepository parkingLotRepository;
+    private TicketRepository ticketRepository;
 
     public TicketService(GateRepository gateRepository,
                          VehicleRepository vehicleRepository,
-                         TicketRepository ticketRepository,
-                         ParkingLotRepository parkingLotRepository) {
+                         ParkingLotRepository parkingLotRepository,
+                         TicketRepository ticketRepository) {
         this.gateRepository = gateRepository;
         this.vehicleRepository = vehicleRepository;
-        this.ticketRepository = ticketRepository;
         this.parkingLotRepository = parkingLotRepository;
+        this.ticketRepository = ticketRepository;
     }
 
     public Ticket issueTicket(Long gateId,
                               String vehicleNumber,
                               String vehicleOwnerName,
-                              VehicleType vehicleType) throws GateNotFoundException, VehicleNotFoundException, ParkingLotNotFoundException {
+                              VehicleType vehicleType) throws GateNotFoundException {
 
         Ticket ticket = new Ticket();
         ticket.setEntryTime(new Date());
 
-        // Get the gate object from the gate field
-        Optional<Gate> optionalGate = gateRepository.getGateById(gateId);
+        //Get the gate object from the gateId.
+        Optional<Gate> optionalGate = gateRepository.findGateById(gateId);
 
         if (optionalGate.isEmpty()) {
-            throw new GateNotFoundException();
+            throw new GateNotFoundException("Invalid gateId: " + gateId);
         }
-
         Gate gate = optionalGate.get();
-        ticket.setGeneratedGate(gate);
+        ticket.setGeneratedAt(gate);
+        ticket.setGeneratedBy(gate.getOperator());
 
-        Optional<Vehicle> optionalVehicle = vehicleRepository.findById(vehicleNumber);
-        Vehicle savedVehicle;
+        //Get the vehicle object with the vehicleNumber, if it is not present then save it to DB.
+        Optional<Vehicle> optionalVehicle =
+                vehicleRepository.findVehicleByVehicleNumber(vehicleNumber);
+        Vehicle savedVehicle = null;
 
         if (optionalVehicle.isEmpty()) {
             Vehicle vehicle = new Vehicle();
-            vehicle.setVehicleNumber(vehicleNumber);
             vehicle.setVehicleType(vehicleType);
+            vehicle.setVehicleNumber(vehicleNumber);
             vehicle.setOwnerName(vehicleOwnerName);
             savedVehicle = vehicleRepository.save(vehicle);
         } else {
@@ -63,21 +65,18 @@ public class TicketService {
 
         ticket.setVehicle(savedVehicle);
 
-        Optional<ParkingLot> parkingLot = parkingLotRepository.getParkingLot(gateId);
+        //Assign the spot.
+        ParkingLot parkingLot = parkingLotRepository.getParkingLotByGateId(gateId);
+        SpotAssignmentStrategyType spotAssignmentStrategyType = parkingLot.getSpotAssignmentStrategyType();
 
-        if (parkingLot.isEmpty()) {
-            throw new ParkingLotNotFoundException();
-        }
-
-        SpotAssignmentStrategyType spotAssignmentStrategyType = parkingLot.get().getSpotAssignmentStrategyType();
-        SpotAssignmentStrategy spotAssignmentStrategy = SpotAssignmentStrategyFactory.getSpotAssignmentStrategyForType(spotAssignmentStrategyType);
+        SpotAssignmentStrategy spotAssignmentStrategy =
+                SpotAssignmentStrategyFactory.getSpotAssignmentStrategyForType(spotAssignmentStrategyType);
 
         ParkingSpot parkingSpot = spotAssignmentStrategy.assignSpot(vehicleType, gate);
         ticket.setParkingSpot(parkingSpot);
 
-        ticket.setTicketNumber("TICKET_" + gateId + " " + ticket.getEntryTime());
+        ticket.setNumber("TICKET_" + gateId + "_" + ticket.getEntryTime());
 
         return ticketRepository.save(ticket);
     }
-
 }

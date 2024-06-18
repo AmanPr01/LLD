@@ -8,12 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class ParkingLotRepository {
-    private Map<Long, ParkingLot> getParkingLot = new HashMap<>();
-
-    public Optional<ParkingLot> getParkingLot(long gateId) throws ParkingLotNotFoundException {
-        if (getParkingLot.containsKey(gateId)) {
-            return Optional.of(getParkingLot.get(gateId));
-        }
-        throw new ParkingLotNotFoundException();
+    public ParkingLot getParkingLotByGateId(Long gateId) {
+        return null;
     }
 }

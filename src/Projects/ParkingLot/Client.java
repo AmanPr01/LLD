@@ -32,8 +32,8 @@ public class Client {
         TicketService ticketService = new TicketService(
                 gateRepository,
                 vehicleRepository,
-                ticketRepository,
-                parkingLotRepository
+                parkingLotRepository,
+                ticketRepository
         );
 
         TicketController ticketController = new TicketController(ticketService);

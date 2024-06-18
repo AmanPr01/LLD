@@ -10,12 +10,13 @@ public class TicketRepository {
     private Long previousTicketId = 0L;
 
     public Ticket save(Ticket ticket) {
-        if (ticket.getId() == 0) {
-            previousTicketId+=1;
+        if (ticket.getId() == null) {
+            previousTicketId += 1;
             ticket.setId(previousTicketId);
-            ticketMap.put(ticket.getId(), ticket);
+            ticketMap.put(previousTicketId, ticket);
         }
-        ticketMap.put(ticket.getId(), ticket);
+        //update the existing object.
+
         return ticket;
     }
 }
