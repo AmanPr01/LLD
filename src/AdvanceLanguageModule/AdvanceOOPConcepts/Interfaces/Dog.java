@@ -2,7 +2,7 @@ package AdvanceLanguageModule.AdvanceOOPConcepts.Interfaces;
 
 public class Dog implements Animal {
 
-    // Only abstract method has implementation
+    // Abstract method has to be implemented.
     @Override
     public void sound() {
         System.out.println("Dog Barks");

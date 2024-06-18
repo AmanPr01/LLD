@@ -21,6 +21,7 @@ public class Car {
     public Car(String model) {
         this.model = model;
         this.year = 0;
+        this.engine = null;
     }
 
     // Shallow Copy
@@ -79,7 +80,8 @@ public class Car {
         Car shallowCopyCar = new Car(originalCar);
 
         // Deep Copy
-        Car deepCopyCar = new Car(originalCar, true);
+//        Car deepCopyCar = new Car(originalCar, true);
+        Car deepCopyCar = new Car(originalCar.model, originalCar.year, originalCar.engine);
 
         // Modify the Deep Copy
         deepCopyCar.setModel("Honda");

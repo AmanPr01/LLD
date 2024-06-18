@@ -11,7 +11,7 @@ public class ClientPerson {
 
         // Using setters to modify state
         person.setName("Bob");
-        person.setAge(25);
+        person.setAge(-1);
         System.out.println("Updated Name: " + person.getName());
         System.out.println("Updated Age: " + person.getAge());
     }
