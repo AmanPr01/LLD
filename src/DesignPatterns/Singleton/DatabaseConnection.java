@@ -15,6 +15,7 @@ public class DatabaseConnection {
     // Either we can create lock object or use synchronised keyword
     // Double Check Locking
     public static DatabaseConnection getInstance() {
+
         if (instance == null) {
             synchronized (DatabaseConnection.class) {
                 if (instance == null) {

@@ -16,6 +16,7 @@ public class Student {
         this.batch = builder.batch;
         this.gradYear = builder.gradYear;
         this.psp = builder.psp;
+
     }
 
     // if we have to this method before student, it has to be public static

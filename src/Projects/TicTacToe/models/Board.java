@@ -8,6 +8,7 @@ public class Board {
     private List<List<Cell>> board;
 
     public Board(int dimension) {
+        this.dimension = dimension;
         board = new ArrayList<>();
 
         for (int i = 0; i < dimension; i++) {
@@ -23,10 +24,10 @@ public class Board {
         for (List<Cell> cells : board) {
             for (Cell cell : cells) {
                 if (cell.getCellState().equals(CellState.EMPTY)) {
-                    System.out.print("|  |");
+                    System.out.print("|   |");
                 }
                 else {
-                    System.out.print("| " + cell.getPlayer().getSymbol() + " |");
+                    System.out.print("| " + cell.getPlayer().getSymbol().getaChar() + " |");
                 }
             }
             System.out.println();

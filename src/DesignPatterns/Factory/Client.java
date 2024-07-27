@@ -14,7 +14,7 @@ public class Client {
         button.showButton();
 
         DropDown dropDown = uiFactory.createDropDown();
-        dropDown.showDropDown();;
+        dropDown.showDropDown();
 
         Menu menu = uiFactory.createMenu();
         menu.showMenu();

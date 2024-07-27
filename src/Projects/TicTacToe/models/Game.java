@@ -1,6 +1,7 @@
 package Projects.TicTacToe.models;
 
 import Projects.TicTacToe.exceptions.InvalidBotCountException;
+import Projects.TicTacToe.exceptions.InvalidMoveException;
 import Projects.TicTacToe.exceptions.InvalidPlayerCountException;
 import Projects.TicTacToe.exceptions.InvalidPlayerSymbolException;
 import Projects.TicTacToe.strategies.winningstrategies.WinningStrategy;
@@ -36,7 +37,66 @@ public class Game {
         board.print();
     }
 
-    public void makeMove() {}
+    private boolean validateMove(Move move) {
+        Player player = move.getPlayer();
+        Cell cell = move.getCell();
+        int row = cell.getRow();
+        int col = cell.getCol();
+
+        if (row < 0 || row > board.getDimension() || col < 0 || col > board.getDimension() || !board.getBoard().get(row).get(col).getCellState().equals(CellState.EMPTY)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public void makeMove() throws InvalidMoveException {
+        Player currentPlayer = players.get(nextPlayerMoveIndex);
+
+        System.out.println("It is " + currentPlayer.getName() + "'s move");
+
+        // ask the user where they want to make the move.
+
+        Move move = currentPlayer.makeMove(board);
+
+        // before making the move first validate whether the cell is empty or not.
+        if (!validateMove(move)) {
+            throw new InvalidMoveException("Invalid move, please try again");
+        }
+
+        // Valid move, we can execute move on the board.
+        int row = move.getCell().getRow();
+        int col = move.getCell().getCol();
+
+        Cell cell = board.getBoard().get(row).get(col);
+        cell.setCellState(CellState.FILLED);
+        cell.setPlayer(currentPlayer);
+
+        Move finalMove = new Move(currentPlayer, cell);
+        moves.add(finalMove);
+
+        nextPlayerMoveIndex = (nextPlayerMoveIndex + 1) % players.size();
+
+        if (checkWinner(finalMove)) {
+            winner = currentPlayer;
+            gameState = GameState.ENDED;
+        }
+        else if (moves.size() == board.getDimension() * board.getDimension()) {
+            // game is draw
+            gameState = GameState.DRAW;
+        }
+    }
+
+    private boolean checkWinner(Move move) {
+        // Check the row, column, diagonal(if applicable).
+        for (WinningStrategy winningStrategy : winningStrategies) {
+            if (winningStrategy.checkWinner(board, move)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public List<Player> getPlayers() {
         return players;
@@ -109,7 +169,7 @@ public class Game {
             return this;
         }
 
-        public Builder setWinningStrategies(List<WinningStrategy> winingStrategies) {
+        public Builder setWinningStrategies(List<WinningStrategy> winningStrategies) {
             this.winningStrategies = winningStrategies;
             return this;
         }

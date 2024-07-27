@@ -1,5 +1,6 @@
 import Projects.TicTacToe.controllers.GameController;
 import Projects.TicTacToe.exceptions.InvalidBotCountException;
+import Projects.TicTacToe.exceptions.InvalidMoveException;
 import Projects.TicTacToe.exceptions.InvalidPlayerCountException;
 import Projects.TicTacToe.exceptions.InvalidPlayerSymbolException;
 import Projects.TicTacToe.models.*;
@@ -14,7 +15,7 @@ import java.util.List;
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
-    public static void main(String[] args) throws InvalidBotCountException, InvalidPlayerCountException, InvalidPlayerSymbolException {
+    public static void main(String[] args) throws InvalidBotCountException, InvalidPlayerCountException, InvalidPlayerSymbolException, InvalidMoveException {
 
 //        Game game = Game.getBuilder().setWiningStrategies(new ArrayList<>()).setPlayers(null).setDimension(3).build();
 
@@ -27,7 +28,7 @@ public class Main {
 
         List<Player> players = new ArrayList<>();
         players.add(new Player("Aman", new Symbol('X'), PlayerType.HUMAN));
-        players.add(new Player("Krishna", new Symbol('O'), PlayerType.HUMAN));
+        players.add(new Bot("Krishna", new Symbol('O'), BotDifficultyLevel.EASY));
 
         List<WinningStrategy> winningStrategies = List.of(
                 new RowWinningStrategy(),
@@ -51,6 +52,14 @@ public class Main {
             gameController.printBoard(game);
 
             gameController.makeMove(game);
+        }
+
+        if (game.getGameState().equals(GameState.ENDED)) {
+            gameController.printBoard(game);
+            System.out.println(gameController.getWinner(game).getName() + " has WON the Game");
+        }
+        else {
+            System.out.println("Game Draw");
         }
     }
 }
